@@ -1,0 +1,319 @@
+= Retro Screensaver
+:doctype: article
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: rouge
+:version: 1.0
+:author: Your Name
+:email: your.email@example.com
+:date: 2025-11-30
+
+== Overview
+
+A nostalgic animated screensaver written in FreeBASIC that cycles through three classic retro visual effects.
+
+=== Features
+
+* *Star Field* - Animated stars moving downward with varying brightness
+* *Bouncing Text* - "RETRO MODE" text oscillating across the screen
+* *Geometric Trails* - Random colorful lines creating abstract patterns
+* Auto-switching between modes every 10 seconds
+* Manual mode switching with any key press
+* Simple quit functionality
+
+== Requirements
+
+=== Software Requirements
+
+* FreeBASIC compiler (version 1.07.0 or higher)
+* Operating System: Linux, Windows, or macOS
+
+=== Linux Library Dependencies
+
+For Linux systems, you need the following X11 development libraries:
+
+[source,bash]
+----
+# Ubuntu/Debian
+sudo apt-get install libxpm-dev libxrandr-dev
+
+# Fedora/RHEL/CentOS
+sudo dnf install libXpm-devel libXrandr-devel
+
+# Arch Linux
+sudo pacman -S libxpm libxrandr
+----
+
+NOTE: Windows users do not need additional libraries.
+
+== Installation
+
+=== Step 1: Download FreeBASIC
+
+Visit https://www.freebasic.net/[FreeBASIC official website] and download the appropriate version for your operating system.
+
+=== Step 2: Install FreeBASIC
+
+==== Linux
+[source,bash]
+----
+tar -xzf FreeBASIC-*-linux-x86_64.tar.gz
+cd FreeBASIC-*-linux-x86_64
+sudo ./install.sh -i
+----
+
+==== Windows
+Run the installer executable and follow the installation wizard.
+
+=== Step 3: Save the Source Code
+
+Save the screensaver code as `screensaver.bas` in your desired directory.
+
+== Compilation
+
+=== Basic Compilation
+
+[source,bash]
+----
+fbc screensaver.bas
+----
+
+This creates an executable file:
+
+* Linux/macOS: `screensaver`
+* Windows: `screensaver.exe`
+
+=== Compilation Options
+
+==== With Debug Information
+[source,bash]
+----
+fbc -g screensaver.bas
+----
+
+==== Optimized Build
+[source,bash]
+----
+fbc -O 2 screensaver.bas
+----
+
+==== Console Graphics Mode (Linux)
+[source,bash]
+----
+fbc -d FB_GFX_CONSOLE screensaver.bas
+----
+
+== Usage
+
+=== Running the Screensaver
+
+==== Linux/macOS
+[source,bash]
+----
+./screensaver
+----
+
+==== Windows
+[source,cmd]
+----
+screensaver.exe
+----
+
+Or simply double-click the executable file.
+
+=== Controls
+
+[cols="1,3"]
+|===
+|Key |Action
+
+|Any Key
+|Switch to next visual mode manually
+
+|Q or q
+|Quit the screensaver
+
+|===
+
+NOTE: Modes automatically cycle every 10 seconds.
+
+== Visual Modes
+
+=== Mode 1: Star Field
+
+A classic star field effect with 100 animated stars moving downward at constant speed. Each star has varying brightness levels creating depth perception.
+
+*Technical Details:*
+
+* 100 stars with random positions
+* Stars wrap around when reaching the bottom
+* Brightness values range from 0-15
+* Movement speed: 5 pixels per frame
+
+=== Mode 2: Bouncing Text
+
+The text "RETRO MODE" oscillates smoothly across the screen using sine and cosine functions for natural motion.
+
+*Technical Details:*
+
+* Horizontal oscillation: ±200 pixels from center
+* Vertical oscillation: ±100 pixels from center
+* Color: Bright green (RGB: 0, 255, 0)
+* Speed: 2 radians per second
+
+=== Mode 3: Geometric Trails
+
+Random colorful lines are drawn creating abstract geometric patterns reminiscent of 80s computer graphics.
+
+*Technical Details:*
+
+* 11 random lines per frame
+* Full RGB color range
+* Random endpoints within 640×480 window
+* Creates flowing abstract patterns
+
+== Code Structure
+
+=== Global Variables
+
+[source,freebasic]
+----
+Dim Shared As Integer x, y, mode
+Dim Shared As Double last_mode_change
+Dim Shared stars(0 To 99, 0 To 2) As Double
+----
+
+=== Main Functions
+
+`init_stars()`::
+Initializes the star field with random positions and brightness values.
+
+`draw_stars()`::
+Renders and animates the star field, moving stars downward and wrapping them around.
+
+`draw_bouncing_text()`::
+Displays oscillating text using trigonometric functions.
+
+`draw_geometric_trail()`::
+Generates random colorful lines for abstract patterns.
+
+`main_animation()`::
+Main loop that handles mode switching, rendering, and user input.
+
+== Troubleshooting
+
+=== Compilation Errors
+
+==== Error: "cannot find -lXpm" or "cannot find -lXrandr"
+
+*Solution:* Install the required X11 development libraries (see <<Linux Library Dependencies>>).
+
+==== Error: "Suffixes are only valid in -lang deprecated"
+
+*Solution:* Ensure you're using the modern FreeBASIC syntax. Use `Inkey` instead of `Inkey$`.
+
+=== Runtime Issues
+
+==== Black Screen
+
+*Possible causes:*
+
+* Graphics driver incompatibility
+* Insufficient permissions
+* Wrong screen resolution
+
+*Solution:* Try running with console graphics mode or adjust the resolution in the code.
+
+==== Slow Performance
+
+*Solution:* Compile with optimization flags:
+[source,bash]
+----
+fbc -O 2 screensaver.bas
+----
+
+== Customization
+
+=== Changing Screen Resolution
+
+Modify line 6:
+[source,freebasic]
+----
+ScreenRes 800, 600, 32  ' Change from 640x480 to 800x600
+----
+
+=== Adjusting Animation Speed
+
+Modify the sleep value (in milliseconds):
+[source,freebasic]
+----
+Sleep 50  ' Faster animation (change from 100)
+----
+
+=== Changing Mode Duration
+
+Modify the auto-switch timer (in seconds):
+[source,freebasic]
+----
+If current_time - last_mode_change > 15 Then  ' Change from 10 to 15
+----
+
+=== Adding Custom Colors
+
+For the bouncing text:
+[source,freebasic]
+----
+Draw String (tx, ty), "RETRO MODE", RGB(255, 0, 255)  ' Magenta
+----
+
+== Technical Specifications
+
+[cols="1,2"]
+|===
+|Property |Value
+
+|Language
+|FreeBASIC
+
+|Screen Resolution
+|640×480 pixels
+
+|Color Depth
+|32-bit
+
+|Frame Rate
+|~10 FPS (100ms sleep)
+
+|Mode Switch Interval
+|10 seconds
+
+|Number of Stars
+|100
+
+|Lines per Frame (Geometric Mode)
+|11
+
+|===
+
+== License
+
+This screensaver is provided as-is for educational and entertainment purposes. Feel free to modify and distribute according to your needs.
+
+== Version History
+
+[cols="1,1,3"]
+|===
+|Version |Date |Changes
+
+|1.0
+|2025-11-30
+|Initial release with three visual modes
+
+|===
+
+== Acknowledgments
+
+Inspired by classic screensavers from the 1980s and 1990s computing era.
+
+---
